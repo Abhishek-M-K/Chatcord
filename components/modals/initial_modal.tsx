@@ -108,7 +108,7 @@ export const InitialModal = () => {
                     <FormItem>
                       <FormLabel
                         className="uppercase text-sm 
-                        font-semibold text-slate-400 dark:text-secondary/60"
+                        font-semibold text-slate-400/95 dark:text-slate-400/95"
                       >
                         Server Name
                       </FormLabel>

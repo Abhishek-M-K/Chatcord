@@ -26,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { FileUpload } from "@/components/file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z.string().min(5, {
@@ -36,11 +37,12 @@ const formSchema = z.object({
   }),
 });
 
-export const CreateServerModal = () => {
-  const { isOpen, onClose, type } = useModal();
+export const EditServerModal = () => {
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
 
-  const isModalOpen = isOpen && type === "CreateServer";
+  const isModalOpen = isOpen && type === "EditServer";
+  const { server } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -50,11 +52,18 @@ export const CreateServerModal = () => {
     },
   });
 
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [server, form]);
+
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/servers", values);
+      await axios.patch(`/api/servers/${server?.id}`, values);
 
       form.reset();
       router.refresh();
@@ -134,7 +143,7 @@ export const CreateServerModal = () => {
                   disabled={isLoading}
                   className="text-center items-center justify-center mb-2 w-full"
                 >
-                  Create
+                  Save
                 </Button>
               </DialogFooter>
             </form>
