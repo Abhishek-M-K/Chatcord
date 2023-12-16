@@ -49,42 +49,41 @@ const formSchema = z.object({
   type: z.nativeEnum(ChannelType),
 });
 
-export const CreateChannelModal = () => {
+export const EditChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
   const params = useParams();
 
-  const isModalOpen = isOpen && type === "CreateChannel";
-  const { channelType } = data;
+  const isModalOpen = isOpen && type === "EditChannel";
+  const { channel, server } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: channelType || ChannelType.TEXT, //default type of channel is TEXT
+      type: channel?.type || ChannelType.TEXT, //default type of channel is TEXT
     },
   });
 
   useEffect(() => {
-    if (channelType) {
-      form.setValue("type", channelType);
-    } else {
-      form.setValue("type", ChannelType.TEXT);
+    if (channel) {
+      form.setValue("name", channel.name);
+      form.setValue("type", channel.type);
     }
-  }, [channelType, form]);
+  }, [form, channel]);
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: "/api/channels",
+        url: `/api/channels/${channel?.id}`,
         query: {
-          serverId: params?.serverId,
+          serverId: server?.id,
         },
       });
 
-      await axios.post(url, values);
+      await axios.patch(url, values);
 
       form.reset();
       router.refresh();
@@ -105,7 +104,7 @@ export const CreateChannelModal = () => {
         <DialogContent className=" bg-slate-900 text-white p-0 overflow-hidden rounded-lg">
           <DialogHeader>
             <DialogTitle className="text-white font-semibold px-8 py-4 text-center">
-              Create Channel
+              Edit Channel
             </DialogTitle>
           </DialogHeader>
 
@@ -178,7 +177,7 @@ export const CreateChannelModal = () => {
                   disabled={isLoading}
                   className="text-center items-center justify-center mb-2 w-full"
                 >
-                  Create
+                  Save
                 </Button>
               </DialogFooter>
             </form>
