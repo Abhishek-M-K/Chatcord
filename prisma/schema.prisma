@@ -59,6 +59,11 @@ model Member {
   serverId String
   server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
+  messages               Message[]
+  directMessages         DM[]
+  conversationsInitiated Conversation[] @relation("Member1")
+  conversationsReceived  Conversation[] @relation("Member2")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -86,6 +91,67 @@ model Channel {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  messages Message[]
+
   @@index([profileId])
   @@index([serverId])
+}
+
+model Message {
+  id      String @id @default(uuid())
+  content String @db.Text
+
+  fileUrl String? @db.Text
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId])
+  @@index([channelId])
+}
+
+//for channel convos 
+model Conversation {
+  id String @id @default(uuid())
+
+  member1Id String
+  member1   Member @relation("Member1", fields: [member1Id], references: [id], onDelete: Cascade)
+
+  member2Id String
+  member2   Member @relation("Member2", fields: [member2Id], references: [id], onDelete: Cascade)
+
+  directMessages DM[]
+
+  @@unique([member1Id, member2Id])
+  @@index([member1Id])
+  @@index([member2Id])
+}
+
+//for one on one convos
+model DM {
+  id      String  @id @default(uuid())
+  content String  @db.Text
+  fileUrl String? @db.Text
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deleted Boolean @default(false)
+
+  @@index([memberId])
+  @@index([conversationId])
 }

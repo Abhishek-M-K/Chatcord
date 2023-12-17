@@ -14,9 +14,9 @@ interface ServerMemberProps {
 const roleIconMapping = {
   [MemberRole.GUEST]: null,
   [MemberRole.MODERATOR]: (
-    <ShieldCheck className="w-4 h-4 ml-2 text-emerald-500" />
+    <ShieldCheck className="w-4 h-4 mr-2 text-emerald-500" />
   ),
-  [MemberRole.ADMIN]: <ShieldAlert className="w-4 h-4 ml-2 text-rose-500" />,
+  [MemberRole.ADMIN]: <ShieldAlert className="w-4 h-4 mr-2 text-rose-500" />,
 };
 
 export const ServerMember = ({ member, server }: ServerMemberProps) => {
@@ -28,8 +28,13 @@ export const ServerMember = ({ member, server }: ServerMemberProps) => {
   //because in server-channel.tsx we are using capitalize since our mapping is done with lucide-react types
   //but here we are using our own mapping
 
+  const handleClick = () => {
+    router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
+  };
+
   return (
     <button
+      onClick={handleClick}
       className={cn(
         "group p-2 rounded-lg flex items-center gap-x-2 w-full hover:bg-slate-700/10 dark:hover:bg-slate-700/50 transition",
         params?.memberId === member.id && "bg-slate-700/10 dark:bg-slate-700/50"
@@ -42,7 +47,7 @@ export const ServerMember = ({ member, server }: ServerMemberProps) => {
       <p
         className={cn(
           "text-sm lowercase font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition",
-          params?.channelId === member.id &&
+          params?.memberId === member.id &&
             "text-primary dark:text-slate-200 dark:group-hover:text-white"
         )}
       >
