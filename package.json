@@ -33,7 +33,7 @@
     "date-fns": "^3.0.0",
     "emoji-mart": "^5.5.2",
     "lucide-react": "^0.292.0",
-    "next": "14.0.2",
+    "next": "^13.4.12",
     "next-themes": "^0.2.1",
     "query-string": "^8.1.0",
     "react": "^18",

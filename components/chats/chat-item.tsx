@@ -19,6 +19,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
@@ -63,8 +64,16 @@ export const ChatItem = ({
   socketQuery,
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const params = useParams();
+  const router = useRouter();
   const { onOpen } = useModal();
   const fileType = fileUrl?.split(".").pop();
+
+  const onClickMember = () => {
+    if (member.id === currMember.id) return;
+
+    router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: any) => {
@@ -119,13 +128,19 @@ export const ChatItem = ({
   return (
     <div className="relative group flex items-center hover:bg-black/10 transition w-full p-4">
       <div className="group flex gap-x-2 items-start w-full">
-        <div className="hover:drop-shadow-md transition cursor-pointer">
+        <div
+          onClick={onClickMember}
+          className="hover:drop-shadow-md transition cursor-pointer"
+        >
           <UserAvatar src={member.profile.imageUrl} />
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
-              <p className="text-sm font-semibold hover:underline cursor-pointer">
+              <p
+                onClick={onClickMember}
+                className="text-sm font-semibold hover:underline cursor-pointer"
+              >
                 {member.profile.name}
               </p>
               <ActionTooltip label={member.role}>
