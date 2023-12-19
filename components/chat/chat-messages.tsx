@@ -6,7 +6,7 @@ import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader, ServerCrash } from "lucide-react";
 import { Fragment, useRef, ElementRef } from "react";
 import { ChatItem } from "./chat-item";
-import { format } from "date-fns";
+import { format as formatDate } from "date-fns";
 import { useChatSocket } from "@/hooks/use-chat-socket";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
 
@@ -119,7 +119,7 @@ export const ChatMessages = ({
                 content={message.content}
                 fileUrl={message.fileUrl}
                 deleted={message.deleted}
-                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                timestamp={formatDate(new Date(message.createdAt), DATE_FORMAT)}
                 isUpdated={message.updatedAt !== message.createdAt}
                 socketUrl={socketUrl}
                 socketQuery={socketQuery}
