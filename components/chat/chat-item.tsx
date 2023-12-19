@@ -32,7 +32,6 @@ interface ChatItemProps {
   member: Member & {
     profile: Profile;
   };
-  timestamp: string;
   fileUrl: string | null;
   deleted: boolean;
   currMember: Member;
@@ -55,7 +54,6 @@ export const ChatItem = ({
   id,
   content,
   member,
-  timestamp,
   fileUrl,
   deleted,
   currMember,
@@ -147,9 +145,6 @@ export const ChatItem = ({
                 {roleIconMapping[member.role]}
               </ActionTooltip>
             </div>
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              {timestamp}
-            </span>
           </div>
           {isImage && (
             <a
