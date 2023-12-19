@@ -1,6 +1,6 @@
 import { currentProfile } from "@/lib/current-profile"
 import { db } from "@/lib/db";
-import { Message } from "@prisma/client";
+import { DM } from "@prisma/client";
 import { NextResponse } from "next/server"
 
 const MESSAGES_BATCH_SIZE=10;
@@ -12,27 +12,27 @@ export async function GET(
         const {searchParams}=new URL(req.url);
 
         const cursor=searchParams.get("cursor");
-        const channelId=searchParams.get("channelId");
+        const conversationId=searchParams.get("conversationId");
 
         if(!profile){
             return new NextResponse("Unauthorized",{status:401})
         }
 
-        if(!channelId){
-            return new NextResponse("Channel Id Missing",{status:400})
+        if(!conversationId){
+            return new NextResponse("Conversation Id Missing",{status:400})
         }
 
-        let messages: Message[]=[];
+        let messages: DM[]=[];
 
         if(cursor){
-            messages=await db.message.findMany({
+            messages=await db.dM.findMany({
                 take:MESSAGES_BATCH_SIZE,
                 skip:1,
                 cursor:{
                     id:cursor
                 },
                 where:{
-                    channelId,
+                    conversationId,
                 },
                 include:{
                     member:{
@@ -46,10 +46,10 @@ export async function GET(
                 }
             })
         }else{
-            messages=await db.message.findMany({
+            messages=await db.dM.findMany({
                 take:MESSAGES_BATCH_SIZE,
                 where:{
-                    channelId,
+                    conversationId,
                 },
                 include:{
                     member:{
@@ -78,7 +78,7 @@ export async function GET(
         });
 
     }catch(err){
-        console.log("GET_MESSAGES", err)
+        console.log("GET_DIRECT_MESSAGES", err)
         return  new NextResponse("Internal Server Error",{status:500})
     }
 }
