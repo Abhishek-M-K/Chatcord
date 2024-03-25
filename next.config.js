@@ -9,7 +9,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    remotePatterns: ["https://uploadthing.com/*", "https://utfs.io/*"],
+    remotePaths: ["https://uploadthing.com/*", "https://utfs.io/*"],
   },
 };
 
