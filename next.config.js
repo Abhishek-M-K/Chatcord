@@ -9,7 +9,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["uploadthing.com", "utfs.io"],
+    remotePatterns: ["https://uploadthing.com/*", "https://utfs.io/*"],
   },
 };
 
