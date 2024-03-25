@@ -9,7 +9,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    remotePaths: ["https://uploadthing.com/*", "https://utfs.io/*"],
+    domains: ["uploadthing.com", "utfs.io"],
   },
 };
 
